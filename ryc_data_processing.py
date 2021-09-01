@@ -8,7 +8,7 @@ no_conds = 4
 no_runs = 3
 
 this_sub = '03'
-test = loadmat('nROIs=15/sub-1%s.mat'%this_sub)
+test = loadmat('../nROIs=15/sub-1%s.mat'%this_sub)
 
 #conds = test['scramble_conditions']
 #print(conds)
@@ -29,7 +29,7 @@ for s in range(len(subjects)):
 	this_subj = subjects[s]
 
 	# load the data for the selected ROI
-	orig_data = loadmat('nROIs=15/sub-1%s.mat'%this_subj)['data_scramble'][roi_ind,0]
+	orig_data = loadmat('../nROIs=15/sub-1%s.mat'%this_subj)['data_scramble'][roi_ind,0]
 	# start with voxels x TRs x condition x run
 
 	# crop 10 TRs off the beginning and end of each run
