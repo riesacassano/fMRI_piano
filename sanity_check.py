@@ -7,7 +7,7 @@ subjects = ['03','15','20','23']
 run1_data = []
 for s in range(len(subjects)):
 	this_subj = subjects[s]
-	data = np.load('../PMC/sub1%s_run1.npy'%this_subj)
+	data = np.load('../A1/sub1%s_run1.npy'%this_subj)
 	avg_data = np.average(data, axis=0)
 	run1_data.append(avg_data)
 

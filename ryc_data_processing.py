@@ -19,7 +19,7 @@ for i in range(no_ROIs):
 	roi_list.append(test['ROIs'][0][i][0])
 #print(roi_list)
 
-roi =  'PMC' # 'A1', 'PMC', 'MotorCortex'
+roi =  'A1' # 'A1', 'PMC', 'MotorCortex'
 roi_ind = roi_list.index(roi)
 
 subjects = ['03','15','20','23']
@@ -44,7 +44,7 @@ for s in range(len(subjects)):
 	#print(data_reshaped.shape)
 	
 	# save the run 1 data
-	np.save('%s/sub1%s_run1.npy'%(roi,this_subj),data_reshaped[:,:,0])
+	np.save('../%s/sub1%s_run1.npy'%(roi,this_subj),data_reshaped[:,:,0])
 
 	# save the data from runs 2 and 3 concatenated 
-	np.save('%s/sub1%s_runs23.npy'%(roi,this_subj),np.hstack((data_reshaped[:,:,1],data_reshaped[:,:,2])))
+	np.save('../%s/sub1%s_runs23.npy'%(roi,this_subj),np.hstack((data_reshaped[:,:,1],data_reshaped[:,:,2])))
