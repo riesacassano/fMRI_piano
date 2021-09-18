@@ -40,7 +40,7 @@ for s in range(len(subjects)):
 	#print(data_concat.shape)
 	
 	# concatenate the data across runs
-	data_reshape = np.reshape(data_concat, (data_concat.shape[0],-1),order='F')
+	data_reshape = np.reshape(data_concat, (data_concat.shape[0],-1), order='F')
 	#print(data_reshape.shape)
 
 	# save the data for this subject
