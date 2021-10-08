@@ -4,13 +4,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # subjects = ['s103','s115','s120','s123'] # These are AM subjects only
+# use this for intermingled AM and M subjects
 subjects = ['s103','s105','s108','s115','s117','s120','s121','s122','s123']
+# use this for separate AM and M subjects
+# subjects = ['s103','s115','s120','s123','s105','s108','s117','s121','s122']
 
 # all available ROIs
 ROIs = ['AngularG', 'Cerebellum', 'HeschlsG', 'STG', 'MotorCortex', 'TPJ', 'PCC', 'Precuneus', 'A1', 'mPFC', 'Hipp', 'lTPJ', 'rTPJ', 'PMC', 'V1']
 voxels_per_ROI = [562,12,113,513,1362,832,204,1312,516,293,353,382,412,1573,191]
 
 data_filepath = '../data/ROI_by_subject_listen/'
+rep = ['rep1','rep2','avgreps']
 
 
 # test to load a subject
