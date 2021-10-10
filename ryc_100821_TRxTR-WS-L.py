@@ -52,15 +52,13 @@ for jasmine in range(len(ROIs)):
 		data = np.load(data_filepath+'%s/%s.npy'%(sub,roi))
 		# shape is (n_voxels, n_TRs * 2)
 
-		# reshape the data into reps
-		reshaped_data = np.reshape(data,(data.shape[0],n_TRs,-1),order='F')
-
-		# compute correlation matrix for rep 1
-		corr_matrices[:,:,s,0] = np.corrcoef(reshaped_data[:,:,0].T)
+		# compute and save correlation matrix for rep 1
+		corr_matrices[:,:,s,0] = np.corrcoef(data[:,:n_TRs].T)
 		# rep 2
-		corr_matrices[:,:,s,1] = np.corrcoef(reshaped_data[:,:,1].T)
+		corr_matrices[:,:,s,1] = np.corrcoef(data[:,n_TRs:].T)
 		# average reps
-		corr_matrices[:,:,s,2] = np.corrcoef(np.mean(reshaped_data,axis=-1).T)
+		avg_data = np.mean([data[:,:n_TRs],data[:,n_TRs:]],axis=0)
+		corr_matrices[:,:,s,2] = np.corrcoef(avg_data.T)
 
 	
 	# plot each rep
