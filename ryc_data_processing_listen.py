@@ -24,7 +24,7 @@ for s in range(len(subjects)):
 		# this_ROI.shape is (n_voxels, n_TRs, n_conds, n_reps)
 
 		# concatenate both reps of Listen condition
-		this_listen = np.hstack((this_ROI[:,:,1,0],this_ROI[:,:,1,0]))
+		this_listen = np.hstack((this_ROI[:,:,1,0],this_ROI[:,:,1,1]))
 		
 		# save this ROI in the subject's folder
 		np.save(output_filepath+'s1%s/%s'%(subjects[s],ROIs[jasmine]),this_listen)
