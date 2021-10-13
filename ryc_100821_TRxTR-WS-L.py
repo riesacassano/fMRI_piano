@@ -45,7 +45,7 @@ for jasmine in range(len(ROIs)):
 
 	corr_matrices = np.zeros((n_TRs,n_TRs,len(subjects),len(reps)))
 
-	# load data from all subjects and save correlation matrices for each rep
+	# load data from each subjects and save correlation matrices for each rep
 	for s in range(len(subjects)):
 		sub = subjects[s]
 		
