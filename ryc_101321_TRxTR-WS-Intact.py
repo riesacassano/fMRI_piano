@@ -10,8 +10,8 @@ ROIs = ['AngularG', 'Cerebellum', 'HeschlsG', 'STG', 'MotorCortex', 'TPJ', 'PCC'
 #voxels_per_ROI = [562,12,113,513,1362,832,204,1312,516,293,353,382,412,1573,191]
 n_TRs = 148
 
-listen_data_filepath = '../data/ROI_by_subject_listen/'
 playing_data_filepath = '../data/ROI_by_subject_playing_Intact/'
+listen_data_filepath = '../data/ROI_by_subject_listen/'
 figure_filepath = '../figures/TRxTR_WS_Intact_byrep_AM/' # then (un)annotated/roi
 conds = ['playing','listen']
 playing_reps = 3
@@ -37,5 +37,17 @@ for jasmine in range(1):#len(ROIs)):
 	corr_matrices = np.zeros((n_TRs,n_TRs,len(subjects),total_reps))
 
 	# load data for each subject and save correlation matrices for each rep
+	for s in range(1):#len(subjects)):
+		sub = subjects[s]
 
+		# load Intact playing data
+		playing_data = np.load(playing_data_filepath+'%s/%s.npy'%(sub,roi))
+		#print(playing_data.shape)
+		# data shape is (n_voxels, TRs * 3)
 
+		play_reshape = np.reshape(playing_data, (playing_data.shape[0],n_TRs,playing_reps), order='F')
+		#print(play_reshape.shape)
+		# reshaped data shape is (n_voxels, TRs, 3)
+
+		# check that reps 1 match
+		print(np.corrcoef(playing_data[0,:n_TRs],play_reshape[0,:,0]))
