@@ -18,6 +18,11 @@ playing_reps = 3
 listen_reps = 2
 total_reps = 5
 
+# create rep labels for plotting
+rep_labels = []
+for i in range(playing_reps): rep_labels.append('%s rep%d'%(conds[0],i+1))
+for i in range(listen_reps): rep_labels.append('%s rep%d'%(conds[1],i+1))
+
 section_boundaries = [0,39,74,102,141]
 phrase_boundaries = [0,11,20,29,39,46,55,65,74,84,93,102,113,122,132,141]
 HRF = 3 
@@ -37,17 +42,69 @@ for jasmine in range(1):#len(ROIs)):
 	corr_matrices = np.zeros((n_TRs,n_TRs,len(subjects),total_reps))
 
 	# load data for each subject and save correlation matrices for each rep
-	for s in range(1):#len(subjects)):
+	for s in range(len(subjects)):
 		sub = subjects[s]
 
-		# load Intact playing data
+		# load Intact playing data and reshape
 		playing_data = np.load(playing_data_filepath+'%s/%s.npy'%(sub,roi))
-		#print(playing_data.shape)
-		# data shape is (n_voxels, TRs * 3)
-
+		# data shape is (n_voxels, n_TRs * 3)
 		play_reshape = np.reshape(playing_data, (playing_data.shape[0],n_TRs,playing_reps), order='F')
-		#print(play_reshape.shape)
-		# reshaped data shape is (n_voxels, TRs, 3)
+		# reshaped data shape is (n_voxels, n_TRs, 3)
 
-		# check that reps 1 match
-		print(np.corrcoef(playing_data[0,:n_TRs],play_reshape[0,:,0]))
+		# load listen data and reshape
+		listen_data = np.load(listen_data_filepath+'%s/%s.npy'%(sub,roi))
+		# data shape is (n_voxels, n_TRs * 2)
+		listen_reshape = np.reshape(listen_data, (listen_data.shape[0],n_TRs,listen_reps), order='F')
+		# reshaped data shape is (n_voxels, n_TRs, 2)
+
+		# stack 'em
+		this_data = np.dstack((play_reshape,listen_reshape))
+		# stacked data shape is (n_voxels, n_TRs, 5)
+
+		# compute and save the correlation matrices for each rep
+		for r in range(total_reps):
+			corr_matrices[:,:,s,r] = np.corrcoef(this_data[:,:,r].T)
+
+	# create the figure
+	fig, ax = plt.subplots(total_reps,len(subjects),sharex=True,sharey=True,figsize=(10,7.5))
+	fig.suptitle('Within subject pattern correlation, Intact in %s'%roi)
+
+	# shift the axes and add a colorbar axis
+	fig.subplots_adjust(right=0.80)
+	cbar_ax = fig.add_axes([0.85,0.12,0.01,0.75])
+
+	# add column labels for subjects and x label
+	for s in range(len(subjects)): 
+		ax[0,s].set_title(subjects[s])
+		ax[-1,s].set_xlabel('TRs')
+	
+	# add row labels for reps
+	for r in range(total_reps): 
+		ax[r,0].set_ylabel(rep_labels[r]+'\nTRs')
+
+	# establish overall min and max for heatmap coloring
+	this_vmin = np.min(corr_matrices)
+	this_vmax = np.max(corr_matrices)
+
+	# fill in each panel of the figure
+	for s in range(len(subjects)): 
+		for r in range(total_reps):
+			im = ax[r,s].imshow(corr_matrices[:,:,s,r],vmin=this_vmin,vmax=this_vmax)
+
+	fig.colorbar(im,cax=cbar_ax)
+
+	#plt.show()
+	#plt.savefig(figure_filepath+'unannotated/%s'%roi,dpi=500)
+
+	# add annotations of meaningful boundaries
+	for s in range(len(subjects)): 
+		for r in range(total_reps):
+			draw_boundaries(section_boundaries,ax[r,s])
+			draw_boundaries(phrase_boundaries,ax[r,s])
+		
+	plt.show()
+	#plt.savefig(figure_filepath+'annotated/%s'%roi,dpi=500)
+
+	#plt.close(fig)
+
+
