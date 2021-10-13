@@ -42,7 +42,7 @@ for jasmine in range(1):#len(ROIs)):
 	corr_matrices = np.zeros((n_TRs,n_TRs,len(subjects),total_reps))
 
 	# load data for each subject and save correlation matrices for each rep
-	for s in range(len(subjects)):
+	for s in range(1):#len(subjects)):
 		sub = subjects[s]
 
 		# load Intact playing data and reshape
@@ -69,9 +69,13 @@ for jasmine in range(1):#len(ROIs)):
 	fig, ax = plt.subplots(total_reps,len(subjects),sharex=True,sharey=True,figsize=(10,7.5))
 	fig.suptitle('Within subject pattern correlation, Intact in %s'%roi)
 
-	# shift the axes and add a colorbar axis
-	fig.subplots_adjust(right=0.80)
-	cbar_ax = fig.add_axes([0.85,0.12,0.01,0.75])
+	# shift the axes and add a colorbar axes
+	fig.subplots_adjust(bottom=0.15)
+	cbar_ax = fig.add_axes([0.17,0.07,0.1,0.01]) # do this in the "fill in" loop
+# play around with placement of cbar_axes and create array of them 
+
+	# xmin = 0.85, ymin = 0.12
+	# width = 0.01, height = 0.75
 
 	# add column labels for subjects and x label
 	for s in range(len(subjects)): 
@@ -82,27 +86,28 @@ for jasmine in range(1):#len(ROIs)):
 	for r in range(total_reps): 
 		ax[r,0].set_ylabel(rep_labels[r]+'\nTRs')
 
-	# establish overall min and max for heatmap coloring
+	# establish overall min and max for heatmap coloring # do this in the "fill in" loop too
 	this_vmin = np.min(corr_matrices)
 	this_vmax = np.max(corr_matrices)
 
 	# fill in each panel of the figure
-	for s in range(len(subjects)): 
+	for s in range(1):#len(subjects)): 
 		for r in range(total_reps):
 			im = ax[r,s].imshow(corr_matrices[:,:,s,r],vmin=this_vmin,vmax=this_vmax)
 
-	fig.colorbar(im,cax=cbar_ax)
+# colorbars are going to be subject specific
+	fig.colorbar(im,cax=cbar_ax,orientation='horizontal')
 
-	#plt.show()
+	plt.show()
 	#plt.savefig(figure_filepath+'unannotated/%s'%roi,dpi=500)
 
 	# add annotations of meaningful boundaries
-	for s in range(len(subjects)): 
-		for r in range(total_reps):
-			draw_boundaries(section_boundaries,ax[r,s])
-			draw_boundaries(phrase_boundaries,ax[r,s])
+	#for s in range(len(subjects)): 
+	#	for r in range(total_reps):
+	#		draw_boundaries(section_boundaries,ax[r,s])
+	#		draw_boundaries(phrase_boundaries,ax[r,s])
 		
-	plt.show()
+	#plt.show()
 	#plt.savefig(figure_filepath+'annotated/%s'%roi,dpi=500)
 
 	#plt.close(fig)
