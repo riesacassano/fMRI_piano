@@ -36,13 +36,13 @@ def draw_boundaries(boundaries,ax,HRF=HRF,lw=0.5):
 		ax.vlines(lower,lower,upper,linewidth=lw)
 		ax.vlines(upper,lower,upper,linewidth=lw)
 
-for jasmine in range(1):#len(ROIs)):
+for jasmine in range(len(ROIs)):
 	roi = ROIs[jasmine]
 
 	corr_matrices = np.zeros((n_TRs,n_TRs,len(subjects),total_reps))
 
 	# load data for each subject and save correlation matrices for each rep
-	for s in range(1):#len(subjects)):
+	for s in range(len(subjects)):
 		sub = subjects[s]
 
 		# load Intact playing data and reshape
@@ -66,16 +66,8 @@ for jasmine in range(1):#len(ROIs)):
 			corr_matrices[:,:,s,r] = np.corrcoef(this_data[:,:,r].T)
 
 	# create the figure
-	fig, ax = plt.subplots(total_reps,len(subjects),sharex=True,sharey=True,figsize=(10,7.5))
+	fig, ax = plt.subplots(total_reps,len(subjects),sharex=True,sharey=True,figsize=(6.5,7.5))
 	fig.suptitle('Within subject pattern correlation, Intact in %s'%roi)
-
-	# shift the axes and add a colorbar axes
-	fig.subplots_adjust(bottom=0.15)
-	cbar_ax = fig.add_axes([0.17,0.07,0.1,0.01]) # do this in the "fill in" loop
-# play around with placement of cbar_axes and create array of them 
-
-	# xmin = 0.85, ymin = 0.12
-	# width = 0.01, height = 0.75
 
 	# add column labels for subjects and x label
 	for s in range(len(subjects)): 
@@ -86,30 +78,43 @@ for jasmine in range(1):#len(ROIs)):
 	for r in range(total_reps): 
 		ax[r,0].set_ylabel(rep_labels[r]+'\nTRs')
 
-	# establish overall min and max for heatmap coloring # do this in the "fill in" loop too
-	this_vmin = np.min(corr_matrices)
-	this_vmax = np.max(corr_matrices)
+	# shift the axes to make room for the colorbars at the bottom
+	fig.subplots_adjust(bottom=0.15)
+
+	# set the parameters for the colorbar axes
+	cb_xmin = [0.135,0.3375,0.5425,0.745] # only parameter that changes across subjects
+	cb_ymin = 0.07
+	cb_w = 0.15
+	cb_h = 0.01
+	# Is there a way to not hard-code this? Parameters depend on figsize
 
 	# fill in each panel of the figure
-	for s in range(1):#len(subjects)): 
+	for s in range(len(subjects)):
+		# establish overall min and max for this subject for heatmap coloring
+		this_vmin = np.min(corr_matrices[:,:,s,:])
+		this_vmax = np.max(corr_matrices[:,:,s,:]) 
+
+		# plot each rep
 		for r in range(total_reps):
 			im = ax[r,s].imshow(corr_matrices[:,:,s,r],vmin=this_vmin,vmax=this_vmax)
 
-# colorbars are going to be subject specific
-	fig.colorbar(im,cax=cbar_ax,orientation='horizontal')
+		# add the colorbar for each subject at the bottom of their column
+		cax = fig.add_axes([cb_xmin[s],cb_ymin,cb_w,cb_h])
+		fig.colorbar(im,cax=cax,orientation='horizontal',ticks=[this_vmin,0,this_vmax],format='%.1f')
 
-	plt.show()
-	#plt.savefig(figure_filepath+'unannotated/%s'%roi,dpi=500)
+	#plt.show()
+	plt.savefig(figure_filepath+'unannotated/%s'%roi,dpi=500)
 
 	# add annotations of meaningful boundaries
-	#for s in range(len(subjects)): 
-	#	for r in range(total_reps):
-	#		draw_boundaries(section_boundaries,ax[r,s])
-	#		draw_boundaries(phrase_boundaries,ax[r,s])
+	for s in range(len(subjects)): 
+		for r in range(total_reps):
+			draw_boundaries(section_boundaries,ax[r,s])
+			draw_boundaries(phrase_boundaries,ax[r,s])
 		
 	#plt.show()
-	#plt.savefig(figure_filepath+'annotated/%s'%roi,dpi=500)
+	plt.savefig(figure_filepath+'annotated/%s'%roi,dpi=500)
 
-	#plt.close(fig)
+	plt.close(fig)
+	print('%s done!'%roi)
 
 
