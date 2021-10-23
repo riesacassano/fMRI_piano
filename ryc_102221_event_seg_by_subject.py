@@ -32,21 +32,24 @@ df_header = df_header + k_set.tolist()
 
 for jasmine in range(1):#len(ROIs)):
 	roi = ROIs[jasmine]
+	print('starting on %s'%roi)
 
-	# create the DataFrame to hold WvA values for this ROI
+	# create an empty list to hold WvA values for this ROI
 	wva_scores = []
 
 	for s in range(1):#len(subjects)):
-		sub = 's1%s'%subjects[s]
+		#sub = 's1%s'%subjects[s]
+		sub = 's1%s'%subjects[s+1] # there was an issue with s105
+		print()
+		print('starting on %s'%sub)
 
-		for c in range(1):#len(conds)-1):
-			#cond = conds[c]
-			cond = conds[-1]
+		for c in range(1):#len(conds)):
+			cond = conds[c]
 
 			if cond == 'Listen': reps = reps_per_control_cond
 			else: reps = reps_per_scrambled_cond
 
-			for r in range(reps):
+			for r in range(1):#reps):
 				rep = 'rep%d'%(r+1)
 
 				# grab the data from the folder
@@ -82,7 +85,7 @@ for jasmine in range(1):#len(ROIs)):
 					# compute within versus across score and append to the list for this subject/cond/rep
 					same_event = events[:,np.newaxis] == events
 					within = cc[same_event*local_mask].mean()
-					across = cc[(~same_event)*local_mask].mean()
+					across = cc[(~same_event)*local_mask].mean() # "mean of empty slice"
 					within_across = within - across
 					wva_this_scr.append(within_across)
 
@@ -97,7 +100,7 @@ for jasmine in range(1):#len(ROIs)):
 				# append WvA score list as a row to the big WvA list
 				wva_scores.append(this_wva_row)
 
-				print('%s done'%rep)
+				print('%s, %s done'%(cond,rep))
 
 
 	# convert WvA scores to a DataFrame and save it for this ROI
@@ -105,4 +108,6 @@ for jasmine in range(1):#len(ROIs)):
 	wva_filename = output_filepath_WvA + '%s'%roi
 	wva_df.to_csv(wva_filename)
 
+	print('done with %s'%roi)
+	print()
 		
