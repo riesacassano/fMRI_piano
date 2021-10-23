@@ -57,6 +57,8 @@ for jasmine in range(1):#len(ROIs)):
 				data = np.load(data_filename)
 				# data.shape is n_voxels x n_TRs for this run
 
+				# need a normalizing step!
+
 				# compute the TRxTR correlation matrix here
 				cc = np.corrcoef(data.T)
 				# cc.shape is n_TRs x n_TRs
@@ -70,7 +72,7 @@ for jasmine in range(1):#len(ROIs)):
 					# fit the model
 					ev = EventSegment(k)
 					ev.fit(data.T)
-					#print('model with k = %d fit'%k) # for testing only
+					print('model with k = %d fit'%k) # for testing only
 
 					# get model's prediction of event for each time point
 					events = np.argmax(ev.segments_[0],axis=1)
