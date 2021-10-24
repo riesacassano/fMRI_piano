@@ -3,7 +3,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# subjects = [3,5,8,15,17,20,21,23,22] # all subjects in behav data
 subjects = ['s103','s115','s120','s123'] # AM subjects only
+subj_ind = [0,3,5,7] # for behav data indexing
+
 
 # all available ROIs
 ROIs = ['AngularG', 'Cerebellum', 'HeschlsG', 'STG', 'MotorCortex', 'TPJ', 'PCC', 'Precuneus', 'A1', 'mPFC', 'Hipp', 'lTPJ', 'rTPJ', 'PMC', 'V1']
@@ -17,6 +20,17 @@ conds = ['playing','listen']
 playing_reps = 3
 listen_reps = 2
 total_reps = 5
+
+# compute average accuracy per run
+behav_data_filepath = '../data/behavior/accuracy_by_seconds/'
+avg_acc = []
+for r in range(playing_reps):
+	# load the behav data for this rep
+	this_behav = np.load(behav_data_filepath+'I_rep%d.npy'%(r+1))
+	# this_behav.shape is all subjects x seconds
+
+	this_avg_acc = np.mean(this_behav[subj_ind,:],axis=1)
+	avg_acc.append(this_avg_acc)
 
 # create rep labels for plotting
 rep_labels = []
@@ -65,6 +79,13 @@ for jasmine in range(len(ROIs)):
 		for r in range(total_reps):
 			corr_matrices[:,:,s,r] = np.corrcoef(this_data[:,:,r].T)
 
+	# remove the diagonal from each matrix by subtracting the identity
+	cm_orig = np.copy(corr_matrices)
+	for s in range(len(subjects)):
+		for r in range(total_reps):
+			corr_matrices[:,:,s,r] = cm_orig[:,:,s,r] - np.identity(cm_orig[:,:,s,r].shape[0])
+
+
 	# create the figure
 	fig, ax = plt.subplots(total_reps,len(subjects),sharex=True,sharey=True,figsize=(6.5,7.5))
 	fig.suptitle('Within subject pattern correlation, Intact in %s'%roi)
@@ -98,12 +119,16 @@ for jasmine in range(len(ROIs)):
 		for r in range(total_reps):
 			im = ax[r,s].imshow(corr_matrices[:,:,s,r],vmin=this_vmin,vmax=this_vmax)
 
+		# display the average accuracy for each playing rep
+		for r in range(playing_reps):
+			ax[r,s].text(n_TRs+1,n_TRs,'acc=\n%.3f'%np.asarray(avg_acc)[r,s],fontsize='xx-small')
+
 		# add the colorbar for each subject at the bottom of their column
 		cax = fig.add_axes([cb_xmin[s],cb_ymin,cb_w,cb_h])
 		fig.colorbar(im,cax=cax,orientation='horizontal',ticks=[this_vmin,0,this_vmax],format='%.1f')
 
 	#plt.show()
-	plt.savefig(figure_filepath+'unannotated/%s'%roi,dpi=500)
+	plt.savefig(figure_filepath+'unannotated_nodiag/%s'%roi,dpi=500)
 
 	# add annotations of meaningful boundaries
 	for s in range(len(subjects)): 
@@ -112,7 +137,7 @@ for jasmine in range(len(ROIs)):
 			draw_boundaries(phrase_boundaries,ax[r,s])
 		
 	#plt.show()
-	plt.savefig(figure_filepath+'annotated/%s'%roi,dpi=500)
+	plt.savefig(figure_filepath+'annotated_nodiag/%s'%roi,dpi=500)
 
 	plt.close(fig)
 	print('%s done!'%roi)
