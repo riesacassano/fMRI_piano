@@ -41,21 +41,16 @@ for jasmine in range(len(ROIs)):
 		this_cond_df = wva_scores.loc[wva_scores['cond']==cond]
 
 		# label this panel of the figure
-		ax[c].set_xlabel('k')
 		ax[c].set_xlim(1,k_set[-1]+1)
 		ax[c].set_xticks(k_set)
 		ax[c].set_xticklabels(k_set,fontsize='x-small')
 		ax[c].set_ylabel('%s: model fit\n(within vs across)'%cond,fontsize='x-small')
-		#ax[c].set_title('%s'%cond)
 
 		# plot each rep
 		for r in range(reps):
 			rep = 'rep%d'%(r+1)
 			this_rep = this_cond_df[this_cond_df['rep']==rep]
-			this_rep = this_rep.values.tolist()[0][2:] # just want the values
-			#print(np.max(this_rep))
-			#print(np.argmax(this_rep))
-			
+			this_rep = this_rep.values.tolist()[0][2:] # just want the values		
 
 			# plot the values against the k
 			ax[c].plot(k_set,this_rep,label=rep)
