@@ -5,7 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 input_filepath = '../data/HMM_WvA_scores/'
-output_filepath = '../figures/HMM'
+output_filepath = '../figures/HMM/'
 
 # currently available ROIs
 ROIs = ['A1','AngularG','Hipp','MotorCortex','mPFC','PMC','TPJ','V1']
@@ -16,7 +16,7 @@ reps_per_scrambled_cond = 3
 reps_per_control_cond = 2
 
 
-for jasmine in range(1):#len(ROIs)):
+for jasmine in range(len(ROIs)):
 	roi = ROIs[jasmine]
 
 	# load the WvA scores for this ROI
@@ -27,11 +27,11 @@ for jasmine in range(1):#len(ROIs)):
 	k_set = [int(k) for k in k_list]
 
 	# create the figure
-	fig,ax = plt.subplots(1,5,sharey=True,figsize=(14,5))
-	ax[0].set_ylabel('model fit (within vs across)')
+	fig,ax = plt.subplots(5,1,figsize=(6,8.5))
 	fig.suptitle('HMM fits for average of %s subjects in %s'%(subject_group,roi))
+	ax[-1].set_xlabel('k (number of events)')
 
-	for c in range(1):#len(conds)):
+	for c in range(len(conds)):
 		cond = conds[c]
 
 		if cond == 'Listen': reps = reps_per_control_cond
@@ -44,18 +44,26 @@ for jasmine in range(1):#len(ROIs)):
 		ax[c].set_xlabel('k')
 		ax[c].set_xlim(1,k_set[-1]+1)
 		ax[c].set_xticks(k_set)
-		ax[c].set_xticklabels(k_set,fontsize='xx-small')
-		ax[c].set_title('%s'%cond)
+		ax[c].set_xticklabels(k_set,fontsize='x-small')
+		ax[c].set_ylabel('%s: model fit\n(within vs across)'%cond,fontsize='x-small')
+		#ax[c].set_title('%s'%cond)
 
 		# plot each rep
-		for r in range(1):#len(reps)):
+		for r in range(reps):
 			rep = 'rep%d'%(r+1)
 			this_rep = this_cond_df[this_cond_df['rep']==rep]
 			this_rep = this_rep.values.tolist()[0][2:] # just want the values
+			#print(np.max(this_rep))
+			#print(np.argmax(this_rep))
+			
 
 			# plot the values against the k
 			ax[c].plot(k_set,this_rep,label=rep)
 
-		ax[c].legend()
+			# add a dot to mark the max
+			ax[c].scatter(k_set[np.argmax(this_rep)],np.max(this_rep))
 
-	plt.show()
+		ax[c].legend(fontsize='x-small')
+
+	#plt.show()
+	plt.savefig(output_filepath+'%s_%s'%(roi,subject_group),dpi = 300)
