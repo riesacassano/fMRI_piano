@@ -56,8 +56,6 @@ sd_el_all = np.asarray(sd_el_all)
 avg_el_all = np.flip(avg_el_all,axis=1) # reverse the order of the columns for plotting
 sd_el_all = np.flip(sd_el_all,axis=1)
 
-#print(avg_el_all)
-
 fig,ax = plt.subplots(figsize=(7,7))
 ax.boxplot(avg_el_all,vert=False,labels=np.flip(k_set))
 #plt.show()
