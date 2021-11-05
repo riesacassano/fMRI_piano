@@ -1,0 +1,1 @@
+# This script is adapted from '../Princeton/analysis/5_spring_thesis_analysis/2+3_pattern/scripts/plot_for_Ebio.py'. It plots mean and SEM of pattern correlation values for A1, motor cortex, and PMC. It generates one plot each for playing and listening, and one combined plot.
