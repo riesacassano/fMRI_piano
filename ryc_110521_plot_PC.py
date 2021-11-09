@@ -42,7 +42,7 @@ listen_sig_levels = [['','.','',''],['','','',''],['.','.','','']]
 # plot just the playing values on three separate subplots
 filename = 'A1_MC_PMC_playing'
 
-fig,ax = plt.subplots(1,len(ROIs),figsize=(10,5),sharey=True)
+fig,ax = plt.subplots(1,len(ROIs),figsize=(15,5),sharey=True)
 fig.suptitle('Average pattern correlation values, rep1 of Intact, playing')
 ax[0].set_ylabel('correlation')
 
@@ -76,7 +76,7 @@ plt.close(fig)
 # plot just the listen values on three separate subplots
 filename = 'A1_MC_PMC_listen'
 
-fig,ax = plt.subplots(1,len(ROIs),figsize=(10,5),sharey=True)
+fig,ax = plt.subplots(1,len(ROIs),figsize=(15,5),sharey=True)
 fig.suptitle('Average pattern correlation values, avgreps of Listen')
 ax[0].set_ylabel('correlation')
 
@@ -110,7 +110,7 @@ plt.close(fig)
 # plot playing and listen values combined on three separate subplots
 filename = 'A1_MC_PMC_combined'
 
-fig,ax = plt.subplots(1,len(ROIs),figsize=(10,5),sharey=True)
+fig,ax = plt.subplots(1,len(ROIs),figsize=(15,5),sharey=True)
 fig.suptitle('Average pattern correlation values')
 ax[0].set_ylabel('correlation')
 
