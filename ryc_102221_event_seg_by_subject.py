@@ -1,5 +1,6 @@
 # This script runs event segmentation using hidden Markov models on data from individual subjects. WvA is implemented based on Jamal's script 'hmm_K_sweep_paper_no_srm.py', as explored in 'ryc_101521_WvA_implementation.ipynb.' This script saves within versus across (WvA) scores for each ROI as CSV in '../data/HMM_WvA_scores/'. It also saves the HMM predicted events for each time point in '../models/HMM_event_seg/'. The models can be used later to calculate event length, plot HMM-predicted boundaries overlaid on TRxTR matrices, or match predicted event boundaries to human annotated boundaries.
 # Update 11/9/21: Add timing. Remove M subjects. Select ROIs only. No Listen condition. New k set. Add normalizing step.
+# s115: "mean of empty slice"
 
 import numpy as np
 from scipy import stats
