@@ -5,17 +5,20 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-#subj = 's103' # 's115'
-#cond = 'I'
-#rep = 'rep3' # 'rep1'
-#roi = 'MotorCortex' # 'V1'
-#k = 12 # 26
-
-subj = 's115'
+subj = 's103'
 cond = 'I'
-rep = 'rep1'
-roi = 'V1'
-k = 26
+rep = 'rep3' 
+roi = 'MotorCortex'
+k = 12
+title_text = 'subject 103, rep 3 of Intact\nin motor cortex, k = 12'
+
+#subj = 's115'
+#cond = 'I'
+#rep = 'rep1'
+#roi = 'V1'
+#k = 26
+#title_text = 'subject 115, rep 1 of Intact\nin primary visual cortex (V1), k = 12'
+
 
 data_filepath = '../data/data_by_run/%s/%s/%s/%s.npy' %(roi,subj,cond,rep)
 model_filepath = '../models/HMM_event_seg/all_reps_avg_AM/%s/AM_%s_%s.txt' %(roi,cond,rep)
@@ -37,8 +40,8 @@ pred_seg = HMM_pred_df['%d'%k]
 def plot_tt_similarity_matrix(ax, data_matrix, bounds, n_TRs, title_text):
     ax.imshow(np.corrcoef(data_matrix.T), cmap='viridis')
     ax.set_title(title_text,fontsize='xx-large')
-    ax.set_xlabel('TR',fontsize='x-large')
-    ax.set_ylabel('TR',fontsize='x-large')
+    ax.set_xlabel('time point (TR)',fontsize='x-large')
+    ax.set_ylabel('time point (TR)',fontsize='x-large')
     # plot the boundaries 
     bounds_aug = np.concatenate(([0],bounds,[n_TRs]))
     for i in range(len(bounds_aug)-1):
@@ -57,7 +60,6 @@ bounds = np.where(np.diff(pred_seg))[0]
 
 # plot in function above
 f, ax = plt.subplots(1,1, figsize = (6,6))
-title_text = '%s %s of %s in %s, k = %d'%(subj,rep,cond,roi,k)
 n_TRs = 148
 plot_tt_similarity_matrix(ax, data, bounds, n_TRs, title_text)
 f.tight_layout()
