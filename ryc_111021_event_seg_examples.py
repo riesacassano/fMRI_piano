@@ -12,12 +12,12 @@ roi = 'MotorCortex'
 k = 12
 title_text = 'subject 103, rep 3 of Intact\nin motor cortex, k = 12'
 
-#subj = 's115'
-#cond = 'I'
-#rep = 'rep1'
-#roi = 'V1'
-#k = 26
-#title_text = 'subject 115, rep 1 of Intact\nin primary visual cortex (V1), k = 12'
+subj = 's115'
+cond = 'I'
+rep = 'rep1'
+roi = 'V1'
+k = 26
+title_text = 'subject 115, rep 1 of Intact\nin primary visual cortex (V1), k = 26'
 
 
 data_filepath = '../data/data_by_run/%s/%s/%s/%s.npy' %(roi,subj,cond,rep)
